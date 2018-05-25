@@ -2,10 +2,7 @@
   "name": "geostyler-wfs-parser",
   "version": "0.0.1",
   "description": "GeoStyler Data Parser implementation for Web Feature Service (WFS)",
-  "main": "index.js",
-  "files": [
-    "dist"
-  ],
+  "main": "dist/WfsDataParser.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/terrestris/geostyler-wfs-parser.git"
