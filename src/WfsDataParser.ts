@@ -5,7 +5,9 @@ import {
 } from 'geostyler-data';
 
 import {
-  get
+  get,
+  isEmpty,
+  isFinite
 } from 'lodash';
 
 import {
@@ -49,35 +51,73 @@ class WfsDataParser implements DataParser {
   }
 
   /**
-   * Fetch schema and sample data and transforms it to the GeoStyler data model
+   * Generate request parameter string for a passed object
+   *
+   * @param {Object} params Object holding request params
+   * @return {string} The URI encoded request parameter string joined with &
+   */
+  generateRequestParamString(params: any): string {
+    return Object.keys(params)
+      .filter(key => !isEmpty(params[key]) || isFinite(params[key]))
+      .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]))
+      .join('&');
+  }
+
+  /**
+   * Fetch schema and sample data and transforms it to the GeoStyler data model.
+   *
+   * Currently, WFS service must support application/json as outputFormat
+   * and needs CORS headers (only needed if WFS Service is not located on the same origin
+   * as the component using this parser) to be available in responses
+   *
    * @param wfsConfig The parameters of the WFS
    */
-  readData(wfsConfig: WfsParams): Promise<Data> {
+  readData({
+    url,
+    version,
+    typeName,
+    maxFeatures = 10,
+    propertyName,
+    featureID
+  }: WfsParams): Promise<Data> {
 
-    const {
-      url,
-      version,
-      typeName
-    } = wfsConfig;
-
-    const params = {
+    const describeFeatureTypeParams = {
       service: this.service,
       version,
       request: 'DescribeFeatureType',
       typenames: typeName
     };
 
-    const requestParams = Object.keys(params)
-      .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key])).join('&');
+    const getFeatureParams = {
+      service: this.service,
+      version,
+      request: 'GetFeature',
+      typenames: typeName,
+      featureID,
+      outputFormat: 'application/json'
+    };
+    Object.assign(getFeatureParams, {
+      count: maxFeatures
+    });
+
+    if (version === '2.0.0') {
+      Object.assign(getFeatureParams, {
+        count: maxFeatures
+      });
+    } else {
+      Object.assign(getFeatureParams, {
+        maxFeatures
+      });
+    }
 
     const options = {
       tagNameProcessors: [this.tagNameProcessor]
     };
 
     // Fetch data schema via describe feature type
-    const requestDescribeFeatureTpye = `${url}?${requestParams}`;
+    const requestDescribeFeatureType = `${url}?${this.generateRequestParamString(describeFeatureTypeParams)}`;
     const describeFeatureTypePromise = new Promise<DataSchema>((resolve, reject) => {
-      fetch(requestDescribeFeatureTpye)
+      fetch(requestDescribeFeatureType)
         .then(response => response.text())
         .then(describeFeatueTypeResult => {
           try {
@@ -114,11 +154,22 @@ class WfsDataParser implements DataParser {
         });
     });
 
-    const fc: FeatureCollection = {
-      type: 'FeatureCollection',
-      features: []
-    };
-    const getFeaturePromise = Promise.resolve(fc);
+    // Fetch sample data via WFS GetFeature
+    const requestGetFeature = `${url}?${this.generateRequestParamString(getFeatureParams)}`;
+    const getFeaturePromise = new Promise<FeatureCollection>((resolve, reject) => {
+      fetch(requestGetFeature)
+        .then(response => response.json())
+        .then((getFeatureResult: any) => {
+          const fc: FeatureCollection = getFeatureResult as FeatureCollection;
+          resolve(fc);
+        }).catch(err => {
+          const emptyFc: FeatureCollection = {
+            type: 'FeatureCollection',
+            features: []
+          };
+          reject(emptyFc);
+        });
+    });
 
     return new Promise<Data>((resolve, reject) => {
       // Fetch features and type definition in parallel and
