@@ -19,8 +19,8 @@ describe('WfsDataParser implements DataParser', () => {
 
   describe('#readData implementation', () => {
 
-    it('rejects promise if errornous DescribeFeatureType response has been returned', () => {
-      fetch.mockResponseOnce(JSON.stringify({ data: '12345' }));
+    it('rejects promise if errornous DescribeFeatureType / WFS response has been returned', () => {
+      fetch.mockResponse(JSON.stringify({ data: '12345' }));
 
       const wfsParser = new WfsDataParser();
       const resultPromise = wfsParser.readData({
@@ -36,9 +36,8 @@ describe('WfsDataParser implements DataParser', () => {
       resultPromise.then(onFullFilled, onRejected);
     });
 
-    it('Fetches DataSchema via describeFeatureType', () => {
-
-      const describeFeatureTypeRespnse = `<?xml version="1.0" encoding="UTF-8"?>
+    it('fetches dataSchema via WFS-DescribeFeatureType and exampleFeatures via WFS-GetFeature', () => {
+      const describeFeatureTypeResponse = `<?xml version="1.0" encoding="UTF-8"?>
         <xsd:schema xmlns:gml="http://www.opengis.net/gml/3.2"
         xmlns:osm="http://terrestris" xmlns:wfs="http://www.opengis.net/wfs/2.0"
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -63,13 +62,43 @@ describe('WfsDataParser implements DataParser', () => {
         name="osm-country-borders" substitutionGroup="gml:AbstractFeature" type="osm:osm-country-bordersType"/>
       </xsd:schema>`;
 
-      fetch.mockResponseOnce(describeFeatureTypeRespnse);
+      const getFeatureResponse = {
+        'type': 'FeatureCollection',
+        'totalFeatures': 2,
+        'features': [{
+          'type': 'Feature',
+          'id': 'osm-busstops.fid-4dec2e09_163976bf70d_-73ac',
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [568249.50975093, 6720390.38378923]
+          },
+          'geometry_name': 'geometry',
+          'properties': {
+            'osm_id': 29073854
+          }
+        }, {
+          'type': 'Feature',
+          'id': 'osm-busstops.fid-4dec2e09_163976bf70d_-73ab',
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [981048.0170072, 7001258.45667367]
+          },
+          'geometry_name': 'geometry',
+          'properties': {
+            'osm_id': 29077474
+          }
+        }]
+      };
+
+      // mock responses of WFS DescribeFeatureType and WFS GetFeature
+      fetch.mockResponses([describeFeatureTypeResponse], [JSON.stringify(getFeatureResponse)]);
 
       const wfsParser = new WfsDataParser();
       const resultPromise = wfsParser.readData({
         url: '//ows.terrestris.de/geoserver/osm/wfs',
         version: '2.0.0',
-        typeName: 'osm:osm-country-borders'
+        typeName: 'osm:osm-country-borders',
+        maxFeatures: 1
       });
 
       const onFullFilled = (result: any) => {
@@ -79,10 +108,32 @@ describe('WfsDataParser implements DataParser', () => {
         expect(result.schema.properties.osm_id).toEqual({
           type: 'xsd:long'
         });
+
+        expect(result.exampleFeatures).toEqual(getFeatureResponse);
       };
 
       resultPromise.then(onFullFilled);
+    });
+  });
 
+  describe('#generateRequestParamString', () => {
+    it('is defined', () => {
+      const wfsParser = new WfsDataParser();
+      expect(wfsParser.generateRequestParamString).toBeDefined();
+    });
+
+    it('returns a requestString from an object', () => {
+      const requestString = 'LAYER=OSM-WMS&VERSION=1.3.0&SERVICE=WMS&REQUEST=getLegendGraphic&FORMAT=image%2Fpng';
+      const params = {
+        LAYER: 'OSM-WMS',
+        VERSION: '1.3.0',
+        SERVICE: 'WMS',
+        REQUEST: 'getLegendGraphic',
+        FORMAT: 'image/png'
+      };
+      const wfsParser = new WfsDataParser();
+      const got = wfsParser.generateRequestParamString(params);
+      expect(got).toBe(requestString);
     });
   });
 
