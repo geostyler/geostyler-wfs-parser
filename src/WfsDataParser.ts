@@ -64,7 +64,12 @@ class WfsDataParser implements DataParser {
   }
 
   /**
-   * Fetch schema and sample data and transforms it to the GeoStyler data model
+   * Fetch schema and sample data and transforms it to the GeoStyler data model.
+   *
+   * Currently, WFS service must support application/json as outputFormat
+   * and needs CORS headers (only needed if WFS Service is not located on the same origin
+   * as the component using this parser) to be available in responses
+   *
    * @param wfsConfig The parameters of the WFS
    */
   readData({
