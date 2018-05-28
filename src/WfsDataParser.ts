@@ -1,6 +1,12 @@
-import { DataParser, Data, DataSchema } from 'geostyler-data';
+import {
+  DataParser,
+  Data,
+  DataSchema
+} from 'geostyler-data';
 
-import { get } from 'lodash';
+import {
+  get
+} from 'lodash';
 
 import {
   parseString
@@ -10,16 +16,21 @@ import {
   FeatureCollection
 } from 'geojson';
 
+/**
+ * Interface representing the parameters to be send to WFS
+ */
 interface WfsParams {
   url: string;
   version: string;
   typeName: string;
   featureID?: string;
   propertyName?: string[];
+  maxFeatures?: number;
 }
 
 /**
- *
+ * Class implementing DataParser to fetch schema and sample data
+ * using WFS requests (DescribeFeatureType resp. GetFeature)
  */
 class WfsDataParser implements DataParser {
 
@@ -38,8 +49,8 @@ class WfsDataParser implements DataParser {
   }
 
   /**
-   *
-   * @param inputData
+   * Fetch schema and sample data and transforms it to the GeoStyler data model
+   * @param wfsConfig The parameters of the WFS
    */
   readData(wfsConfig: WfsParams): Promise<Data> {
 
@@ -63,42 +74,46 @@ class WfsDataParser implements DataParser {
       tagNameProcessors: [this.tagNameProcessor]
     };
 
+    // Fetch data schema via describe feature type
     const requestDescribeFeatureTpye = `${url}?${requestParams}`;
     const describeFeatureTypePromise = new Promise<DataSchema>((resolve, reject) => {
       fetch(requestDescribeFeatureTpye)
         .then(response => response.text())
         .then(describeFeatueTypeResult => {
-          parseString(describeFeatueTypeResult, options, (err: any, result: any) => {
-            if (err) {
-              const msg = `Error while parsing DescribeFeatureType response: ${err}`;
-              reject(msg);
-            }
-
-            const attributePath = 'schema.complexType[0].complexContent[0].extension[0].sequence[0].element';
-            const attributes: any = get(result, attributePath);
-
-            const properties = {};
-            attributes.forEach((attr: any) => {
-              const { name, type } = get(attr, '$');
-              if (!properties[name]) {
-                properties[name] = {type};
+          try {
+            parseString(describeFeatueTypeResult, options, (err: any, result: any) => {
+              if (err) {
+                const msg = `Error while parsing DescribeFeatureType response: ${err}`;
+                reject(msg);
               }
+
+              const attributePath = 'schema.complexType[0].complexContent[0].extension[0].sequence[0].element';
+              const attributes: any = get(result, attributePath);
+
+              const properties = {};
+              attributes.forEach((attr: any) => {
+                const { name, type } = get(attr, '$');
+                if (!properties[name]) {
+                  properties[name] = {type};
+                }
+              });
+
+              const title = get(result, 'schema.element[0].$.name');
+
+              const schema = {
+                type: 'object',
+                title,
+                properties
+              };
+
+              resolve(schema);
             });
-
-            const title = get(result, 'schema.element[0].$.name');
-
-            const schema = {
-              type: 'object',
-              title,
-              properties
-            };
-
-            resolve(schema);
-          });
+          } catch (error) {
+            reject(`Could not parse XML document: ${error}`);
+          }
         });
     });
 
-    // describe feature type
     const fc: FeatureCollection = {
       type: 'FeatureCollection',
       features: []
