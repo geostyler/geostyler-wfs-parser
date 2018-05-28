@@ -40,7 +40,7 @@
   "jest": {
     "automock": false,
     "setupFiles": [
-      "<rootDir>/src/setupTests.js"
+      "<rootDir>/src/setupTests.ts"
     ],
     "moduleFileExtensions": [
       "ts",
