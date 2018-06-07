@@ -28,6 +28,7 @@ interface WfsParams {
   featureID?: string;
   propertyName?: string[];
   maxFeatures?: number;
+  fetchParams?: Object;
 }
 
 /**
@@ -78,7 +79,8 @@ class WfsDataParser implements DataParser {
     typeName,
     maxFeatures = 10,
     propertyName,
-    featureID
+    featureID,
+    fetchParams = {}
   }: WfsParams): Promise<Data> {
 
     const describeFeatureTypeParams = {
@@ -117,7 +119,7 @@ class WfsDataParser implements DataParser {
     // Fetch data schema via describe feature type
     const requestDescribeFeatureType = `${url}?${this.generateRequestParamString(describeFeatureTypeParams)}`;
     const describeFeatureTypePromise = new Promise<DataSchema>((resolve, reject) => {
-      fetch(requestDescribeFeatureType)
+      fetch(requestDescribeFeatureType, fetchParams)
         .then(response => response.text())
         .then(describeFeatueTypeResult => {
           try {
@@ -157,7 +159,7 @@ class WfsDataParser implements DataParser {
     // Fetch sample data via WFS GetFeature
     const requestGetFeature = `${url}?${this.generateRequestParamString(getFeatureParams)}`;
     const getFeaturePromise = new Promise<FeatureCollection>((resolve, reject) => {
-      fetch(requestGetFeature)
+      fetch(requestGetFeature, fetchParams)
         .then(response => response.json())
         .then((getFeatureResult: any) => {
           const fc: FeatureCollection = getFeatureResult as FeatureCollection;
