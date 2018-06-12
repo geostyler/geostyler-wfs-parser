@@ -23,6 +23,7 @@
     "@types/geojson": "7946.0.3",
     "@types/lodash": "4.14.109",
     "@types/xml2js": "0.4.3",
+    "coveralls": "3.0.1",
     "geostyler-data": "0.4.0",
     "lodash": "4.17.10",
     "xml2js": "0.4.19"
@@ -49,7 +50,10 @@
     "transform": {
       "\\.(ts)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testRegex": "/src/.*\\.spec.(ts|js)$"
+    "testRegex": "/src/.*\\.spec.(ts|js)$",
+    "collectCoverageFrom": [
+      "src/WfsDataParser.ts"
+    ]
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
