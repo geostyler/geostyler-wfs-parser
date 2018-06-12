@@ -22,20 +22,20 @@
   "dependencies": {
     "@types/geojson": "7946.0.3",
     "@types/lodash": "4.14.109",
-    "@types/xml2js": "0.4.2",
-    "geostyler-data": "0.1.0",
+    "@types/xml2js": "0.4.3",
+    "geostyler-data": "0.4.0",
     "lodash": "4.17.10",
     "xml2js": "0.4.19"
   },
   "devDependencies": {
-    "@types/jest": "22.2.3",
-    "@types/node": "10.0.9",
-    "jest": "22.4.3",
-    "jest-fetch-mock": "1.6.2",
-    "np": "2.20.1",
+    "@types/jest": "23.0.2",
+    "@types/node": "10.3.2",
+    "jest": "23.1.0",
+    "jest-fetch-mock": "1.6.4",
+    "np": "3.0.4",
     "ts-jest": "22.4.6",
     "tslint": "5.10.0",
-    "typescript": "2.8.3"
+    "typescript": "2.9.1"
   },
   "jest": {
     "automock": false,
