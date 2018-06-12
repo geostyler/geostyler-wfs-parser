@@ -23,6 +23,7 @@
     "scripts",
     "acceptance-tests",
     "webpack",
+    "coverage",
     "jest",
     "src/**.spec.ts",
     "src/setupTests.ts"
