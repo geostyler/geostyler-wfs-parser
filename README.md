@@ -1,6 +1,8 @@
 # geostyler-wfs-parser
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/terrestris/geostyler-wfs-parser.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.com/terrestris/geostyler-wfs-parser.svg?branch=master)](https://travis-ci.com/terrestris/geostyler-wfs-parser)
+[![Coverage Status](https://coveralls.io/repos/github/terrestris/geostyler-wfs-parser/badge.svg?branch=master)](https://coveralls.io/github/terrestris/geostyler-wfs-parser?branch=master)
 
 [GeoStyler](https://github.com/terrestris/geostyler/) Data Parser implementation for Web Feature Services (WFS)
 
