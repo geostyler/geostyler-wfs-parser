@@ -37,6 +37,11 @@ interface WfsParams {
  */
 class WfsDataParser implements DataParser {
 
+  /**
+   * The name of the WfsDataParser.
+   */
+  public static title = 'WFS Data Parser';
+
   service = 'WFS';
 
   /**
