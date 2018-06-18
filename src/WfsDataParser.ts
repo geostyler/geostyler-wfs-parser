@@ -21,7 +21,7 @@ import {
 /**
  * Interface representing the parameters to be send to WFS
  */
-interface WfsParams {
+export interface ReadParams {
   url: string;
   version: string;
   typeName: string;
@@ -86,7 +86,7 @@ class WfsDataParser implements DataParser {
     propertyName,
     featureID,
     fetchParams = {}
-  }: WfsParams): Promise<Data> {
+  }: ReadParams): Promise<Data> {
 
     const describeFeatureTypeParams = {
       service: this.service,
