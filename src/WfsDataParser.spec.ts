@@ -1,6 +1,7 @@
 import 'isomorphic-fetch';
 
 import WfsDataParser from './WfsDataParser';
+import { JSONSchema4TypeName } from 'json-schema';
 
 it('WfsDataParser is defined', () => {
   expect(WfsDataParser).toBeDefined();
@@ -106,7 +107,10 @@ describe('WfsDataParser implements DataParser', () => {
         expect(result.schema.type).toEqual('object');
         expect(typeof result.schema.properties).toBe('object');
         expect(result.schema.properties.osm_id).toEqual({
-          type: 'xsd:long'
+          type: 'number'
+        });
+        expect(result.schema.properties.admin_level).toEqual({
+          type: 'number'
         });
 
         expect(result.exampleFeatures).toEqual(getFeatureResponse);
@@ -134,6 +138,42 @@ describe('WfsDataParser implements DataParser', () => {
       const wfsParser = new WfsDataParser();
       const got = wfsParser.generateRequestParamString(params);
       expect(got).toBe(requestString);
+    });
+  });
+
+  describe('#mapXsdTypeToJsonDataType', () => {
+    it('is defined', () => {
+      const wfsParser = new WfsDataParser();
+      expect(wfsParser.mapXsdTypeToJsonDataType).toBeDefined();
+    });
+
+    it('maps XSD types to JSON schema datatypes correctly', () => {
+      const wfsParser = new WfsDataParser();
+
+      const typeMapping = {
+        'xsd:string': 'string',
+        'xsd:boolean': 'boolean',
+        'xsd:byte': 'number',
+        'xsd:decimal': 'number',
+        'xsd:int': 'number',
+        'xsd:integer': 'number',
+        'xsd:long': 'number',
+        'xsd:negativeInteger': 'number',
+        'xsd:nonNegativeInteger': 'number',
+        'xsd:nonPositiveInteger': 'number',
+        'xsd:positiveInteger': 'number',
+        'xsd:short': 'number',
+        'xsd:unsignedLong': 'number',
+        'xsd:unsignedInt': 'number',
+        'xsd:unsignedShort': 'number',
+        'xsd:unsignedByte': 'number'
+      };
+
+      Object.keys(typeMapping).forEach(xsdType => {
+        const expectedJsonSchemaType = typeMapping[xsdType];
+        expect(wfsParser.mapXsdTypeToJsonDataType(xsdType)).toEqual(expectedJsonSchemaType);
+      });
+
     });
   });
 
