@@ -27,6 +27,7 @@ export interface ReadParams {
   typeName: string;
   featureID?: string;
   propertyName?: string[];
+  srsName?: string;
   maxFeatures?: number;
   fetchParams?: Object;
 }
@@ -85,6 +86,7 @@ class WfsDataParser implements DataParser {
     maxFeatures = 10,
     propertyName,
     featureID,
+    srsName,
     fetchParams = {}
   }: ReadParams): Promise<Data> {
 
@@ -101,6 +103,7 @@ class WfsDataParser implements DataParser {
       request: 'GetFeature',
       typenames: typeName,
       featureID,
+      srsName,
       outputFormat: 'application/json'
     };
     Object.assign(getFeatureParams, {
