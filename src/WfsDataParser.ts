@@ -185,9 +185,8 @@ class WfsDataParser implements DataParser {
               attributes.forEach((attr: any) => {
                 const { name, type } = get(attr, '$');
                 if (!properties[name]) {
-                  debugger;
-                  const property: SchemaProperty = {type: this.mapXsdTypeToJsonDataType(type)};
-                  properties[name] = property;
+                  const propertyType: SchemaProperty = {type: this.mapXsdTypeToJsonDataType(type)};
+                  properties[name] = propertyType;
                 }
               });
 
