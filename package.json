@@ -21,6 +21,7 @@
   "homepage": "https://github.com/terrestris/geostyler-wfs-parser#readme",
   "dependencies": {
     "@types/geojson": "7946.0.4",
+    "@types/json-schema": "6.0.1",
     "@types/lodash": "4.14.112",
     "@types/xml2js": "0.4.3",
     "coveralls": "3.0.1",

@@ -1,8 +1,11 @@
 import {
   DataParser,
   Data,
-  DataSchema
+  DataSchema,
+  SchemaProperty
 } from 'geostyler-data';
+
+import { JSONSchema4TypeName } from 'json-schema';
 
 import {
   get,
@@ -68,6 +71,44 @@ class WfsDataParser implements DataParser {
       .filter(key => !isEmpty(params[key]) || isFinite(params[key]))
       .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]))
       .join('&');
+  }
+
+  /**
+   * Map XSD datatypes (SimpleType) to json schema data stypes
+   *
+   * @param qualifiedXsdDataType The XSD datatype as string (including namespace)
+   * @returns {JSONSchema4TypeName} The corresponding JSON schema type name
+   */
+  mapXsdTypeToJsonDataType(qualifiedXsdDataType: string): JSONSchema4TypeName {
+    const xsdDataType = qualifiedXsdDataType.indexOf(':') > -1
+      ? qualifiedXsdDataType.split(':')[1]
+      : qualifiedXsdDataType;
+
+    switch (xsdDataType) {
+      case 'string':
+        return 'string';
+      case 'boolean':
+        return 'boolean';
+      case 'float':
+      case 'double':
+      case 'long':
+      case 'byte':
+      case 'decimal':
+      case 'integer':
+      case 'int':
+      case 'positiveInteger':
+      case 'negativeInteger':
+      case 'nonPositiveInteger':
+      case 'nonNegativeInteger':
+      case 'short':
+      case 'unsignedLong':
+      case 'unsignedInt':
+      case 'unsignedShort':
+      case 'unsignedByte':
+        return 'number';
+      default:
+        return 'string';
+    }
   }
 
   /**
@@ -140,17 +181,19 @@ class WfsDataParser implements DataParser {
               const attributePath = 'schema.complexType[0].complexContent[0].extension[0].sequence[0].element';
               const attributes: any = get(result, attributePath);
 
-              const properties = {};
+              const properties: { [name: string]: SchemaProperty } = {};
               attributes.forEach((attr: any) => {
                 const { name, type } = get(attr, '$');
                 if (!properties[name]) {
-                  properties[name] = {type};
+                  debugger;
+                  const property: SchemaProperty = {type: this.mapXsdTypeToJsonDataType(type)};
+                  properties[name] = property;
                 }
               });
 
               const title = get(result, 'schema.element[0].$.name');
 
-              const schema = {
+              const schema: DataSchema = {
                 type: 'object',
                 title,
                 properties
