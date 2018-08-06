@@ -7,11 +7,9 @@ import {
 
 import { JSONSchema4TypeName } from 'json-schema';
 
-import {
-  get,
-  isEmpty,
-  isFinite
-} from 'lodash';
+const get = require('lodash/get');
+const isEmpty = require('lodash/isEmpty');
+const isFinite = require('lodash/isFinite');
 
 import {
   parseString
