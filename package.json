@@ -54,7 +54,7 @@
     "testRegex": "/src/.*\\.spec.(ts|js)$",
     "collectCoverageFrom": [
       "src/WfsDataParser.ts"
-    ] ,
+    ],
     "testURL": "http://localhost/"
   },
   "scripts": {
