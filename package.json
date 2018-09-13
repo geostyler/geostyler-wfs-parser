@@ -26,7 +26,7 @@
     "@types/xml2js": "0.4.3",
     "coveralls": "3.0.1",
     "geostyler-data": "0.5.0",
-    "lodash": "4.17.10",
+    "lodash": "4.17.11",
     "xml2js": "0.4.19"
   },
   "devDependencies": {
