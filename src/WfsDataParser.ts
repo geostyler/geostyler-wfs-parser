@@ -122,7 +122,7 @@ class WfsDataParser implements DataParser {
     url,
     version,
     typeName,
-    maxFeatures = 10,
+    maxFeatures,
     propertyName,
     featureID,
     srsName,
@@ -145,11 +145,8 @@ class WfsDataParser implements DataParser {
       srsName,
       outputFormat: 'application/json'
     };
-    Object.assign(getFeatureParams, {
-      count: maxFeatures
-    });
 
-    if (version === '2.0.0') {
+    if (version.startsWith('2')) {
       Object.assign(getFeatureParams, {
         count: maxFeatures
       });
