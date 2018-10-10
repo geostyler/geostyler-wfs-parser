@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@types/node": "10.11.3",
-    "@types/jest": "23.3.2",
+    "@types/jest": "23.3.6",
     "jest": "23.1.0",
     "jest-fetch-mock": "1.6.5",
     "np": "3.0.4",
