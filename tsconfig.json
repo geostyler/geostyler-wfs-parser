@@ -26,6 +26,8 @@
     "coverage",
     "jest",
     "src/**.spec.ts",
-    "src/setupTests.ts"
+    "src/setupTests.ts",
+    "browser",
+    "browser-build.config.js"
   ]
 }

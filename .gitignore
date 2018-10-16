@@ -9,6 +9,7 @@
 # production
 /build
 /dist
+/browser
 
 # misc
 .DS_Store
