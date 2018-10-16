@@ -37,7 +37,7 @@ export interface ReadParams {
  * Class implementing DataParser to fetch schema and sample data
  * using WFS requests (DescribeFeatureType resp. GetFeature)
  */
-class WfsDataParser implements DataParser {
+export class WfsDataParser implements DataParser {
 
   /**
    * The name of the WfsDataParser.
