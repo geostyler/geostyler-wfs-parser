@@ -4,7 +4,7 @@ require("whatwg-fetch");
 
 module.exports = {
   entry: [
-    '@babel/polyfill',
+    "@babel/polyfill",
     "whatwg-fetch",
     "./src/WfsDataParser.ts"
   ],
