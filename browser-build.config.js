@@ -6,7 +6,7 @@ module.exports = {
   entry: [
     '@babel/polyfill',
     'whatwg-fetch',
-    './src/WfsDataParser.ts'
+    "./src/WfsDataParser.ts"
   ],
   output: {
     filename: "wfsDataParser.js",
