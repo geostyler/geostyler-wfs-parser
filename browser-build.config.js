@@ -1,6 +1,13 @@
 const webpack = require("webpack");
+require("@babel/polyfill");
+require("whatwg-fetch");
+
 module.exports = {
-  entry: "./src/WfsDataParser.ts",
+  entry: [
+    "@babel/polyfill",
+    "whatwg-fetch",
+    "./src/WfsDataParser.ts"
+  ],
   output: {
     filename: "wfsDataParser.js",
     path: __dirname + "/browser",
