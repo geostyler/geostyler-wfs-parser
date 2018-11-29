@@ -40,7 +40,7 @@
     "awesome-typescript-loader": "4.0.1",
     "coveralls": "3.0.1",
     "jest": "23.1.0",
-    "jest-fetch-mock": "1.6.5",
+    "jest-fetch-mock": "2.0.1",
     "np": "3.0.4",
     "ts-jest": "23.0.1",
     "tslint": "5.10.0",
