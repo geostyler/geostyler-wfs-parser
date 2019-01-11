@@ -39,7 +39,6 @@
     "@types/xml2js": "0.4.3",
     "awesome-typescript-loader": "5.2.1",
     "coveralls": "3.0.2",
-    "isomorphic-fetch": "2.2.1",
     "jest": "23.6.0",
     "jest-fetch-mock": "2.1.0",
     "np": "3.1.0",
@@ -48,7 +47,8 @@
     "typescript": "3.2.2",
     "uglifyjs-webpack-plugin": "2.1.1",
     "webpack": "4.28.4",
-    "webpack-cli": "3.2.1"
+    "webpack-cli": "3.2.1",
+    "whatwg-fetch": "3.0.0"
   },
   "jest": {
     "automock": false,
