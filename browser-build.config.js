@@ -1,11 +1,9 @@
-const webpack = require("webpack");
-require("@babel/polyfill");
-require("whatwg-fetch");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
+  mode: 'production',
   entry: [
-    "@babel/polyfill",
-    "whatwg-fetch",
+    "./src/polyfills.ts",
     "./src/WfsDataParser.ts"
   ],
   output: {
@@ -28,6 +26,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin(),
+    new UglifyJsPlugin()
   ]
 };

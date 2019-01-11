@@ -1,7 +1,6 @@
-import 'isomorphic-fetch';
+const fetch = require('jest-fetch-mock');
 
 import WfsDataParser from './WfsDataParser';
-import { JSONSchema4TypeName } from 'json-schema';
 
 it('WfsDataParser is defined', () => {
   expect(WfsDataParser).toBeDefined();
