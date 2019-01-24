@@ -41,7 +41,7 @@
     "coveralls": "3.0.2",
     "jest": "23.6.0",
     "jest-fetch-mock": "2.1.0",
-    "np": "4.0.1",
+    "np": "4.0.2",
     "ts-jest": "23.10.5",
     "tslint": "5.12.1",
     "typescript": "3.2.2",
