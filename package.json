@@ -31,11 +31,11 @@
   },
   "devDependencies": {
     "@babel/polyfill": "7.4.0",
-    "@types/geojson": "7946.0.6",
+    "@types/geojson": "7946.0.7",
     "@types/jest": "24.0.11",
     "@types/json-schema": "7.0.3",
     "@types/lodash": "4.14.122",
-    "@types/node": "11.11.3",
+    "@types/node": "11.11.4",
     "@types/xml2js": "0.4.3",
     "awesome-typescript-loader": "5.2.1",
     "coveralls": "3.0.3",
