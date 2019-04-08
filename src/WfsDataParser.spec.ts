@@ -33,7 +33,9 @@ describe('WfsDataParser implements DataParser', () => {
       const onRejected = (error: any) => {
         expect(error.startsWith('Error while parsing DescribeFeatureType')).toBe(true);
       };
-      resultPromise.then(onFullFilled, onRejected);
+      resultPromise
+        .then(onFullFilled, onRejected)
+        .catch(error => {/** */});
     });
 
     it('fetches dataSchema via WFS-DescribeFeatureType and exampleFeatures via WFS-GetFeature', () => {

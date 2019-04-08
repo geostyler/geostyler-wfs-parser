@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "declaration": true,
     "outDir": "dist",
     "module": "commonjs",
     "target": "es5",
     "lib": ["es7", "dom"],
     "sourceMap": true,
-    "allowJs": true,
     "moduleResolution": "node",
     "rootDir": "src",
     "forceConsistentCasingInFileNames": true,
@@ -25,7 +25,7 @@
     "webpack",
     "coverage",
     "jest",
-    "src/**.spec.ts",
+    "*/**.spec.ts",
     "src/setupTests.ts",
     "browser",
     "browser-build.config.js"

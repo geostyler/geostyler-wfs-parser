@@ -1,6 +1,6 @@
 import {
   DataParser,
-  Data,
+  VectorData,
   DataSchema,
   SchemaProperty
 } from 'geostyler-data';
@@ -43,6 +43,8 @@ export class WfsDataParser implements DataParser {
    * The name of the WfsDataParser.
    */
   public static title = 'WFS Data Parser';
+
+  title = 'WFS Data Parser';
 
   service = 'WFS';
 
@@ -127,7 +129,7 @@ export class WfsDataParser implements DataParser {
     featureID,
     srsName,
     fetchParams = {}
-  }: ReadParams): Promise<Data> {
+  }: ReadParams): Promise<VectorData> {
 
     const describeFeatureTypeParams = {
       service: this.service,
@@ -143,6 +145,7 @@ export class WfsDataParser implements DataParser {
       typenames: typeName,
       featureID,
       srsName,
+      propertyName,
       outputFormat: 'application/json'
     };
 
@@ -198,7 +201,8 @@ export class WfsDataParser implements DataParser {
           } catch (error) {
             reject(`Could not parse XML document: ${error}`);
           }
-        });
+        })
+        .catch(error => reject(`Could not parse XML document: ${error}`));
     });
 
     // Fetch sample data via WFS GetFeature
@@ -209,7 +213,8 @@ export class WfsDataParser implements DataParser {
         .then((getFeatureResult: any) => {
           const fc: FeatureCollection = getFeatureResult as FeatureCollection;
           resolve(fc);
-        }).catch(err => {
+        })
+        .catch(err => {
           const emptyFc: FeatureCollection = {
             type: 'FeatureCollection',
             features: []
@@ -218,7 +223,7 @@ export class WfsDataParser implements DataParser {
         });
     });
 
-    return new Promise<Data>((resolve, reject) => {
+    return new Promise<VectorData>((resolve, reject) => {
       // Fetch features and type definition in parallel and
       // resolve if both are available
       Promise.all([describeFeatureTypePromise, getFeaturePromise])
