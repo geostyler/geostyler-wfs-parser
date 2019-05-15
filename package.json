@@ -47,7 +47,7 @@
     "jest": "24.7.1",
     "jest-fetch-mock": "2.1.2",
     "np": "5.0.1",
-    "terser-webpack-plugin": "1.2.3",
+    "terser-webpack-plugin": "1.2.4",
     "ts-loader": "5.3.3",
     "tslint": "5.15.0",
     "typescript": "3.4.2",
