@@ -6,7 +6,7 @@
   "declaration": "dist/WfsDataParser.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/terrestris/geostyler-wfs-parser.git"
+    "url": "git+https://github.com/geostyler/geostyler-wfs-parser.git"
   },
   "files": [
     "dist",
@@ -21,9 +21,9 @@
   "author": "",
   "license": "BSD-2-Clause",
   "bugs": {
-    "url": "https://github.com/terrestris/geostyler-wfs-parser/issues"
+    "url": "https://github.com/geostyler/geostyler-wfs-parser/issues"
   },
-  "homepage": "https://github.com/terrestris/geostyler-wfs-parser#readme",
+  "homepage": "https://github.com/geostyler/geostyler-wfs-parser#readme",
   "dependencies": {
     "@types/geojson": "^7946.0.7",
     "@types/json-schema": "^7.0.3",
@@ -64,6 +64,6 @@
     "test": "jest",
     "test:watch": "jest --watchAll",
     "lint": "tslint --project tsconfig.json --config tslint.json && tsc --noEmit --project tsconfig.json",
-    "release": "np --no-yarn && git push https://github.com/terrestris/geostyler-wfs-parser.git master --tags"
+    "release": "np --no-yarn && git push https://github.com/geostyler/geostyler-wfs-parser.git master --tags"
   }
 }
