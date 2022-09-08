@@ -25,8 +25,10 @@ describe('WfsDataParser implements DataParser', () => {
       const wfsParser = new WfsDataParser();
       const resultPromise = wfsParser.readData({
         url: '//foo.bar',
-        version: '2.0.0',
-        typeName: 'TEST:TEST'
+        requestParams: {
+          version: '2.0.0',
+          typeNames: 'TEST:TEST'
+        }
       });
 
       const onFullFilled = null;
@@ -98,9 +100,11 @@ describe('WfsDataParser implements DataParser', () => {
       const wfsParser = new WfsDataParser();
       const resultPromise = wfsParser.readData({
         url: '//ows.terrestris.de/geoserver/osm/wfs',
-        version: '2.0.0',
-        typeName: 'osm:osm-country-borders',
-        maxFeatures: 1
+        requestParams: {
+          version: '2.0.0',
+          typeNames: 'osm:osm-country-borders',
+          count: 1
+        }
       });
 
       const onFullFilled = (result: any) => {
