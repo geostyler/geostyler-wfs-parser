@@ -7,13 +7,12 @@ import {
 
 import { JSONSchema4TypeName } from 'json-schema';
 
-const get = require('lodash/get');
 const isEmpty = require('lodash/isEmpty');
 const isFinite = require('lodash/isFinite');
 
 import {
-  parseString
-} from 'xml2js';
+  XMLParser
+} from 'fast-xml-parser';
 
 import {
   FeatureCollection
@@ -70,18 +69,6 @@ export class WfsDataParser implements DataParser {
   public static title = 'WFS Data Parser';
 
   title = 'WFS Data Parser';
-
-  /**
-   * The name Processor is passed as an option to the xml2js parser and modifies
-   * the tagName. It strips all namespaces from the tags.
-   *
-   * @param {string} name The originial tagName
-   * @return {string} The modified tagName
-   */
-  tagNameProcessor(name: string): string {
-    const prefixMatch = new RegExp(/(?!xmlns)^.*:/);
-    return name.replace(prefixMatch, '');
-  }
 
   /**
    * Generate request parameter string for a passed object
@@ -177,10 +164,6 @@ export class WfsDataParser implements DataParser {
       outputFormat: 'application/json',
     };
 
-    const options = {
-      tagNameProcessors: [this.tagNameProcessor]
-    };
-
     // Fetch data schema via describe feature type
     const requestDescribeFeatureType = `${url}?${this.generateRequestParamString(describeFeatureTypeParams)}`;
     const describeFeatureTypePromise = new Promise<DataSchema>((resolve, reject) => {
@@ -188,36 +171,36 @@ export class WfsDataParser implements DataParser {
         .then(response => response.text())
         .then(describeFeatueTypeResult => {
           try {
-            parseString(describeFeatueTypeResult, options, (err: any, result: any) => {
-              if (err) {
-                const msg = `Error while parsing DescribeFeatureType response: ${err}`;
-                reject(msg);
-              }
-
-              const attributePath = 'schema.complexType[0].complexContent[0].extension[0].sequence[0].element';
-              const attributes: any = get(result, attributePath);
-
-              const properties: { [name: string]: SchemaProperty } = {};
-              attributes.forEach((attr: any) => {
-                const { name, type } = get(attr, '$');
-                if (!properties[name]) {
-                  const propertyType: SchemaProperty = {type: this.mapXsdTypeToJsonDataType(type)};
-                  properties[name] = propertyType;
-                }
-              });
-
-              const title = get(result, 'schema.element[0].$.name');
-
-              const schema: DataSchema = {
-                type: 'object',
-                title,
-                properties
-              };
-
-              resolve(schema);
+            const parser = new XMLParser({
+              removeNSPrefix: true,
+              ignoreDeclaration: true,
+              ignoreAttributes: false
             });
+            const result = parser.parse(describeFeatueTypeResult);
+
+            const attributes = result?.schema?.complexType?.complexContent?.extension?.sequence?.element;
+
+            const properties: { [name: string]: SchemaProperty } = {};
+            attributes.forEach((attr: any) => {
+              const name = attr['@_name'];
+              const type = attr['@_type'];
+              if (!properties[name]) {
+                const propertyType: SchemaProperty = {type: this.mapXsdTypeToJsonDataType(type)};
+                properties[name] = propertyType;
+              }
+            });
+
+            const title = result.schema.element['@_name'];
+
+            const schema: DataSchema = {
+              type: 'object',
+              title,
+              properties
+            };
+
+            resolve(schema);
           } catch (error) {
-            reject(`Could not parse XML document: ${error}`);
+            reject(`Error while parsing DescribeFeatureType response: ${error}`);
           }
         })
         .catch(error => reject(`Could not parse XML document: ${error}`));
