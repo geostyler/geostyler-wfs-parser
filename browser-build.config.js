@@ -1,19 +1,22 @@
 const TerserPlugin = require('terser-webpack-plugin');
+require('@babel/polyfill');
 
 module.exports = {
   mode: 'production',
   entry: [
-    "./src/polyfills.ts",
-    "./src/WfsDataParser.ts"
+    '@babel/polyfill',
+    'whatwg-fetch',
+    './src/WfsDataParser.ts'
   ],
   output: {
-    filename: "wfsDataParser.js",
-    path: __dirname + "/browser",
-    library: "GeoStylerWfsParser"
+    filename: 'wfsDataParser.js',
+    path: __dirname + '/browser',
+    library: 'GeoStylerWfsParser',
+    chunkFormat: 'array-push'
   },
   resolve: {
     // Add '.ts' and '.tsx' as resolvable extensions.
-    extensions: [".ts", ".js", ".json"]
+    extensions: ['.ts', '.js', '.json']
   },
   optimization: {
     minimizer: [
@@ -22,13 +25,12 @@ module.exports = {
   },
   module: {
     rules: [
-      // All files with a '.ts'
       {
         test: /\.ts$/,
         include: __dirname + '/src',
         use: [
           {
-            loader: require.resolve('ts-loader'),
+            loader: 'babel-loader',
           },
         ],
       }
