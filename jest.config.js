@@ -1,18 +1,20 @@
 module.exports = {
-  "moduleFileExtensions": [
-    "ts",
-    "js"
+  moduleFileExtensions: [
+    'ts',
+    'js'
   ],
-  "transform": {
-    "^.+\\.ts$": "<rootDir>/node_modules/babel-jest"
+  transform: {
+    '^.+\\.ts$': '<rootDir>/node_modules/babel-jest'
   },
-  "testRegex": "/src/.*\\.spec.(ts|js)$",
-  "collectCoverageFrom": [
-    "src/WfsDataParser.ts"
+  testRegex: '/src/.*\\.spec.(ts|js)$',
+  collectCoverageFrom: [
+    'src/WfsDataParser.ts'
   ],
-  "automock": false,
-  "setupFiles": [
-    "<rootDir>/src/setupTests.ts"
+  automock: false,
+  setupFiles: [
+    '<rootDir>/src/setupTests.ts'
   ],
-  "testURL": "http://localhost/"
+  testEnvironmentOptions: {
+    'url': 'http://localhost/'
+  }
 };
