@@ -22,7 +22,6 @@ export type RequestBaseParams = {
   service: 'WFS';
   request: 'GetFeature' | 'DescribeFeatureType';
   exceptions?: string;
-  outputFormat?: string;
 };
 
 export type GetFeatureOptionalParams = {
@@ -36,12 +35,14 @@ export type RequestParams1_1_0 = {
   version: '1.1.0';
   typeName: string;
   maxFeatures?: number;
+  outputFormat: 'application/json' | 'application/geo+json';
 };
 
 export type RequestParams2_0_0 = {
   version: '2.0.0';
   typeNames: string;
   count?: number;
+  outputFormat: 'application/json' | 'application/geo+json';
 };
 
 export type RequestParams = GetFeatureOptionalParams & (RequestParams1_1_0 | RequestParams2_0_0);
@@ -137,17 +138,24 @@ export class WfsDataParser implements DataParser {
   }: ReadParams): Promise<VectorData> {
 
     let desribeFeatureTypeOpts;
+
+    if (!requestParams.outputFormat) {
+      requestParams.outputFormat = 'application/json';
+    }
+
     if (requestParams.version === '1.1.0') {
       desribeFeatureTypeOpts = {
         version: requestParams.version,
         maxFeatures: requestParams.maxFeatures,
-        typeName: requestParams.typeName
+        typeName: requestParams.typeName,
+        outputFormat: requestParams.outputFormat
       };
     } else {
       desribeFeatureTypeOpts = {
         version: requestParams.version,
         count: requestParams.count,
-        typeNames: requestParams.typeNames
+        typeNames: requestParams.typeNames,
+        outputFormat: requestParams.outputFormat
       };
     }
 
@@ -161,7 +169,6 @@ export class WfsDataParser implements DataParser {
       ...requestParams,
       service: 'WFS',
       request: 'GetFeature',
-      outputFormat: 'application/json',
     };
 
     // Fetch data schema via describe feature type
