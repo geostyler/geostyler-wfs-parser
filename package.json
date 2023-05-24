@@ -70,5 +70,6 @@
     "test:watch": "jest --watchAll",
     "test": "jest --coverage",
     "typecheck": " tsc --noEmit --project tsconfig.json"
-  }
+  },
+  "funding": "https://opencollective.com/geostyler"
 }
