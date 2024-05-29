@@ -67,29 +67,29 @@ describe('WfsDataParser implements DataParser', () => {
       </xsd:schema>`;
 
       const getFeatureResponse = {
-        'type': 'FeatureCollection',
-        'totalFeatures': 2,
-        'features': [{
-          'type': 'Feature',
-          'id': 'osm-busstops.fid-4dec2e09_163976bf70d_-73ac',
-          'geometry': {
-            'type': 'Point',
-            'coordinates': [568249.50975093, 6720390.38378923]
+        type: 'FeatureCollection',
+        totalFeatures: 2,
+        features: [{
+          type: 'Feature',
+          id: 'osm-busstops.fid-4dec2e09_163976bf70d_-73ac',
+          geometry: {
+            type: 'Point',
+            coordinates: [568249.50975093, 6720390.38378923]
           },
-          'geometry_name': 'geometry',
-          'properties': {
-            'osm_id': 29073854
+          geometry_name: 'geometry',
+          properties: {
+            osm_id: 29073854
           }
         }, {
-          'type': 'Feature',
-          'id': 'osm-busstops.fid-4dec2e09_163976bf70d_-73ab',
-          'geometry': {
-            'type': 'Point',
-            'coordinates': [981048.0170072, 7001258.45667367]
+          type: 'Feature',
+          id: 'osm-busstops.fid-4dec2e09_163976bf70d_-73ab',
+          geometry: {
+            type: 'Point',
+            coordinates: [981048.0170072, 7001258.45667367]
           },
-          'geometry_name': 'geometry',
-          'properties': {
-            'osm_id': 29077474
+          geometry_name: 'geometry',
+          properties: {
+            osm_id: 29077474
           }
         }]
       };
