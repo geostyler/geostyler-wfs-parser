@@ -131,7 +131,7 @@ export class WfsDataParser implements DataParser {
    *
    * @param wfsConfig The parameters of the WFS
    */
-  readData({
+  async readData({
     url,
     requestParams,
     fetchParams = {}
@@ -159,93 +159,70 @@ export class WfsDataParser implements DataParser {
       };
     }
 
-    const describeFeatureTypeParams: DescribeFeatureTypeParams = {
-      ...desribeFeatureTypeOpts,
-      service: 'WFS',
-      request: 'DescribeFeatureType',
-    };
-
-    const getFeatureParams: GetFeatureParams = {
-      ...requestParams,
-      service: 'WFS',
-      request: 'GetFeature',
-    };
-
     // Fetch data schema via describe feature type
-    const requestDescribeFeatureType = `${url}?${this.generateRequestParamString(describeFeatureTypeParams)}`;
-    const describeFeatureTypePromise = new Promise<DataSchema>((resolve, reject) => {
-      fetch(requestDescribeFeatureType, fetchParams)
-        .then(response => response.text())
-        .then(describeFeatueTypeResult => {
-          try {
-            const parser = new XMLParser({
-              removeNSPrefix: true,
-              ignoreDeclaration: true,
-              ignoreAttributes: false
-            });
-            const result = parser.parse(describeFeatueTypeResult);
+    let schema: DataSchema;
+    try {
+      const requestParamsString =  this.generateRequestParamString({
+        ...desribeFeatureTypeOpts,
+        service: 'WFS',
+        request: 'DescribeFeatureType',
+      });
+      const requestDescribeFeatureType = `${url}?${requestParamsString}`;
+      const describeFeatureTypeResponse = await fetch(requestDescribeFeatureType, fetchParams);
+      const describeFeatueTypeResult = await describeFeatureTypeResponse.text();
+      const parser = new XMLParser({
+        removeNSPrefix: true,
+        ignoreDeclaration: true,
+        ignoreAttributes: false
+      });
+      const result = parser.parse(describeFeatueTypeResult);
 
-            const attributes = result?.schema?.complexType?.complexContent?.extension?.sequence?.element;
+      const attributes = result?.schema?.complexType?.complexContent?.extension?.sequence?.element || [];
 
-            const properties: { [name: string]: SchemaProperty } = {};
-            attributes.forEach((attr: any) => {
-              const name = attr['@_name'];
-              const type = attr['@_type'];
-              if (!properties[name]) {
-                const propertyType: SchemaProperty = {type: this.mapXsdTypeToJsonDataType(type)};
-                properties[name] = propertyType;
-              }
-            });
+      const properties: { [name: string]: SchemaProperty } = {};
+      attributes.forEach((attr: any) => {
+        const name = attr['@_name'];
+        const type = attr['@_type'];
+        if (!properties[name]) {
+          const propertyType: SchemaProperty = {type: this.mapXsdTypeToJsonDataType(type)};
+          properties[name] = propertyType;
+        }
+      });
 
-            const title = result.schema.element['@_name'];
+      const title = result.schema.element['@_name'];
 
-            const schema: DataSchema = {
-              type: 'object',
-              title,
-              properties
-            };
-
-            resolve(schema);
-          } catch (error) {
-            reject(`Error while parsing DescribeFeatureType response: ${error}`);
-          }
-        })
-        .catch(error => reject(`Could not parse XML document: ${error}`));
-    });
+      schema = {
+        type: 'object',
+        title,
+        properties
+      };
+    } catch (error) {
+      throw `Could not parse XML document: ${error}`;
+    }
 
     // Fetch sample data via WFS GetFeature
-    const requestGetFeature = `${url}?${this.generateRequestParamString(getFeatureParams)}`;
-    const getFeaturePromise = new Promise<FeatureCollection>((resolve, reject) => {
-      fetch(requestGetFeature, fetchParams)
-        .then(response => response.json())
-        .then((getFeatureResult: any) => {
-          const fc: FeatureCollection = getFeatureResult as FeatureCollection;
-          resolve(fc);
-        })
-        .catch(err => {
-          const emptyFc: FeatureCollection = {
-            type: 'FeatureCollection',
-            features: []
-          };
-          reject(emptyFc);
-        });
-    });
+    let exampleFeatures: FeatureCollection;
+    try {
+      const requestGetFeature = `${url}?${this.generateRequestParamString({
+        ...requestParams,
+        service: 'WFS',
+        request: 'GetFeature',
+        outputFormat: 'application/json',
+      })}`;
+      const getFeatureResponse = await fetch(requestGetFeature, fetchParams);
+      const getFeatureResult = await getFeatureResponse.json();
+      exampleFeatures = getFeatureResult as FeatureCollection;
+    } catch (error) {
+      exampleFeatures = {
+        type: 'FeatureCollection',
+        features: []
+      };
+    }
 
-    return new Promise<VectorData>((resolve, reject) => {
-      // Fetch features and type definition in parallel and
-      // resolve if both are available
-      Promise.all([describeFeatureTypePromise, getFeaturePromise])
-        .then(results => {
-          const [schema, exampleFeatures ] = results;
-
-          const data = {
-            schema,
-            exampleFeatures
-          };
-          resolve(data);
-        })
-        .catch(error => reject(error));
-    });
+    return {
+      schema,
+      exampleFeatures
+    };
   }
 
 }
