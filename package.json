@@ -65,7 +65,7 @@
     "lint:typecheck:test": "npm run lint && npm run typecheck && npm run test",
     "lint": "eslint -c .eslintrc.js --ext .ts",
     "prepublishOnly": "npm run build",
-    "release": "np --no-yarn && git push https://github.com/geostyler/geostyler-wfs-parser.git master",
+    "release": "np --no-yarn && git push https://github.com/geostyler/geostyler-wfs-parser.git main",
     "test:watch": "jest --watchAll",
     "test": "jest --coverage",
     "typecheck": " tsc --noEmit --project tsconfig.json"

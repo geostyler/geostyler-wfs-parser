@@ -48,6 +48,6 @@ jobs:
 
     - name: Publish to coveralls ⭐
       # coverage/lcov.info was generated in the previous npm run build step
-      uses: coverallsapp/github-action@master
+      uses: coverallsapp/github-action@main
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
