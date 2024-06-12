@@ -177,19 +177,24 @@ export class WfsDataParser implements DataParser {
       });
       const result = parser.parse(describeFeatueTypeResult);
 
-      const attributes = result?.schema?.complexType?.complexContent?.extension?.sequence?.element || [];
+      let attributes = result?.schema?.complexType?.complexContent?.extension?.sequence?.element
 
       const properties: { [name: string]: SchemaProperty } = {};
-      attributes.forEach((attr: any) => {
-        const name = attr['@_name'];
-        const type = attr['@_type'];
-        if (!properties[name]) {
-          const propertyType: SchemaProperty = {type: this.mapXsdTypeToJsonDataType(type)};
-          properties[name] = propertyType;
+      if (attributes) {
+        if (!Array.isArray(attributes)) {
+          attributes = [attributes];
         }
-      });
+        attributes.forEach((attr: any) => {
+          const name = attr['@_name'];
+          const type = attr['@_type'];
+          if (!properties[name]) {
+            const propertyType: SchemaProperty = {type: this.mapXsdTypeToJsonDataType(type)};
+            properties[name] = propertyType;
+          }
+        });
+      }
 
-      const title = result.schema.element['@_name'];
+      const title = result?.schema?.element?.['@_name'];
 
       schema = {
         type: 'object',
