@@ -194,7 +194,7 @@ export class WfsDataParser implements DataParser {
         });
       }
 
-      const title = result.schema.element['@_name'];
+      const title = result?.schema?.element?.['@_name'];
 
       schema = {
         type: 'object',
