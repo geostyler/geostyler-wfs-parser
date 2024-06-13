@@ -35,14 +35,14 @@ export type RequestParams1_1_0 = {
   version: '1.1.0';
   typeName: string;
   maxFeatures?: number;
-  outputFormat: 'application/json' | 'application/geo+json';
+  outputFormat?: 'application/json' | 'application/geo+json';
 };
 
 export type RequestParams2_0_0 = {
   version: '2.0.0';
   typeNames: string;
   count?: number;
-  outputFormat: 'application/json' | 'application/geo+json';
+  outputFormat?: 'application/json' | 'application/geo+json';
 };
 
 export type RequestParams = GetFeatureOptionalParams & (RequestParams1_1_0 | RequestParams2_0_0);
