@@ -1,6 +1,6 @@
 {
   "name": "geostyler-wfs-parser",
-  "version": "2.0.3",
+  "version": "3.0.0-next.1",
   "description": "GeoStyler Data Parser implementation for Web Feature Service (WFS)",
   "type": "module",
   "main": "dist/WfsDataParser.js",
