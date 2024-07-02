@@ -2,6 +2,7 @@
   "name": "geostyler-wfs-parser",
   "version": "2.0.3",
   "description": "GeoStyler Data Parser implementation for Web Feature Service (WFS)",
+  "type": "module",
   "main": "dist/WfsDataParser.js",
   "declaration": "dist/WfsDataParser.d.ts",
   "repository": {
@@ -9,8 +10,7 @@
     "url": "git+https://github.com/geostyler/geostyler-wfs-parser.git"
   },
   "files": [
-    "dist",
-    "browser"
+    "dist"
   ],
   "keywords": [
     "geostyler",
@@ -25,49 +25,42 @@
   },
   "homepage": "https://github.com/geostyler/geostyler-wfs-parser#readme",
   "dependencies": {
-    "@types/geojson": "^7946.0.14",
-    "@types/json-schema": "^7.0.15",
-    "@types/lodash": "^4.17.4",
     "fast-xml-parser": "^4.4.0",
     "geostyler-data": "^1.0.0",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.6",
-    "@babel/plugin-proposal-class-properties": "^7.18.6",
-    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
-    "@babel/polyfill": "^7.12.1",
-    "@babel/preset-env": "^7.24.6",
-    "@babel/preset-typescript": "^7.24.6",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
     "@terrestris/eslint-config-typescript": "^5.0.0",
-    "@types/jest": "^29.5.12",
+    "@types/geojson": "^7946.0.14",
+    "@types/json-schema": "^7.0.15",
+    "@types/lodash": "^4.17.4",
     "@types/node": "^20.12.12",
     "@typescript-eslint/eslint-plugin": "^7.11.0",
-    "@typescript-eslint/eslint-plugin-tslint": "^7.0.2",
     "@typescript-eslint/parser": "^7.11.0",
-    "babel-jest": "^29.7.0",
-    "babel-loader": "^9.1.3",
-    "coveralls": "^3.1.1",
+    "@vitest/coverage-istanbul": "^1.6.0",
+    "conventional-changelog-conventionalcommits": "^7.0.2",
     "eslint": "^8.56.0",
-    "jest": "^29.7.0",
-    "jest-fetch-mock": "^3.0.3",
     "np": "^10.0.5",
+    "semantic-release": "^24.0.0",
     "terser-webpack-plugin": "^5.3.10",
     "typescript": "^5.4.5",
-    "webpack": "^5.91.0",
-    "webpack-cli": "^5.1.4",
-    "whatwg-fetch": "^3.6.20"
+    "vite": "^5.3.2",
+    "vitest": "^1.6.0"
   },
   "scripts": {
-    "build:browser": "webpack --config browser-build.config.js",
-    "build": "tsc -p tsconfig.json && npm run build:browser",
+    "build:browser": "vite build",
+    "build": "npm run build:browser && tsc -p tsconfig.json",
     "lint:test": "npm run lint && npm run test",
     "lint:typecheck:test": "npm run lint && npm run typecheck && npm run test",
-    "lint": "eslint -c .eslintrc.js --ext .ts",
+    "lint": "eslint -c .eslintrc.cjs --ext .ts",
     "prepublishOnly": "npm run build",
     "release": "np --no-yarn && git push https://github.com/geostyler/geostyler-wfs-parser.git main",
-    "test:watch": "jest --watchAll",
-    "test": "jest --coverage",
+    "test:watch": "vitest watch",
+    "test": "vitest run --coverage",
     "typecheck": " tsc --noEmit --project tsconfig.json"
   },
   "funding": "https://opencollective.com/geostyler"
