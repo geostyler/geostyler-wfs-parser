@@ -1,16 +1,21 @@
-const fetch = require('jest-fetch-mock');
-
+import { describe, expect, it, vi } from 'vitest';
 import WfsDataParser from './WfsDataParser';
+
+const fetchMock = vi.fn();
+global.fetch = fetchMock;
+
+const createFetchResponse = (data) => {
+  return {
+    json: () => new Promise((resolve) => resolve(JSON.parse(data))),
+    text: () => new Promise((resolve) => resolve(data))
+  };
+};
 
 it('WfsDataParser is defined', () => {
   expect(WfsDataParser).toBeDefined();
 });
 
 describe('WfsDataParser implements DataParser', () => {
-
-  beforeEach(() => {
-    fetch.resetMocks();
-  });
 
   it('readData is defined', () => {
     const wfsParser = new WfsDataParser();
@@ -20,7 +25,7 @@ describe('WfsDataParser implements DataParser', () => {
   describe('#readData implementation', () => {
 
     it('rejects promise if errornous DescribeFeatureType / WFS response has been returned', () => {
-      fetch.mockResponse(JSON.stringify({ data: '12345' }));
+      fetchMock.mockResolvedValue(createFetchResponse(JSON.stringify({ data: '12345' })));
 
       const wfsParser = new WfsDataParser();
       const resultPromise = wfsParser.readData({
@@ -95,7 +100,8 @@ describe('WfsDataParser implements DataParser', () => {
       };
 
       // mock responses of WFS DescribeFeatureType and WFS GetFeature
-      fetch.mockResponses([describeFeatureTypeResponse], [JSON.stringify(getFeatureResponse)]);
+      fetchMock.mockResolvedValueOnce(createFetchResponse(describeFeatureTypeResponse));
+      fetchMock.mockResolvedValueOnce(createFetchResponse(JSON.stringify(getFeatureResponse)));
 
       const wfsParser = new WfsDataParser();
       const resultPromise = wfsParser.readData({

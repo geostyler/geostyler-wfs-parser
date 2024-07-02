@@ -3,12 +3,12 @@
     "baseUrl": ".",
     "declaration": true,
     "outDir": "dist",
-    "module": "commonjs",
-    "target": "es5",
-    "lib": ["dom", "es2021"],
+    "module": "ES2022",
+    "target": "ES2022",
+    "lib": ["dom", "ES2022"],
     "sourceMap": true,
     "inlineSources": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "rootDir": "src",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
@@ -26,8 +26,9 @@
     "coverage",
     "jest",
     "*/**.spec.ts",
-    "src/setupTests.ts",
     "browser",
-    "browser-build.config.js"
+    "browser-build.config.js",
+    "vite.config.ts",
+    "vitest.config.ts"
   ]
 }
