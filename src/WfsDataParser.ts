@@ -7,8 +7,7 @@ import {
 
 import { JSONSchema4TypeName } from 'json-schema';
 
-const isEmpty = require('lodash/isEmpty');
-const isFinite = require('lodash/isFinite');
+const isEmpty = (obj: any) => [Object, Array].includes((obj || {}).constructor) && !Object.entries((obj || {})).length;
 
 import {
   XMLParser
@@ -79,7 +78,7 @@ export class WfsDataParser implements DataParser {
    */
   generateRequestParamString(params: any): string {
     return Object.keys(params)
-      .filter(key => !isEmpty(params[key]) || isFinite(params[key]))
+      .filter(key => !isEmpty(params[key]) || Number.isFinite(params[key]))
       .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]))
       .join('&');
   }
