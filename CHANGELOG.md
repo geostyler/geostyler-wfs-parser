@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/geostyler/geostyler-wfs-parser/compare/v3.0.0...v3.0.1) (2024-07-02)
+
+
+### Bug Fixes
+
+* fix build by removing lodash ([45d9ae3](https://github.com/geostyler/geostyler-wfs-parser/commit/45d9ae3d93697968e7ff02f0093522c96cfe72ff))
+
 ## [3.0.0](https://github.com/geostyler/geostyler-wfs-parser/compare/v2.0.3...v3.0.0) (2024-07-02)
 
 
