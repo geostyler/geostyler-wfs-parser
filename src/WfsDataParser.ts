@@ -176,7 +176,7 @@ export class WfsDataParser implements DataParser {
       });
       const result = parser.parse(describeFeatueTypeResult);
 
-      let attributes = result?.schema?.complexType?.complexContent?.extension?.sequence?.element
+      let attributes = result?.schema?.complexType?.complexContent?.extension?.sequence?.element;
 
       const properties: { [name: string]: SchemaProperty } = {};
       if (attributes) {
