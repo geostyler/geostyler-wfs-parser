@@ -139,7 +139,11 @@ export class WfsDataParser implements DataParser {
     let desribeFeatureTypeOpts;
 
     if (!requestParams.outputFormat) {
-      requestParams.outputFormat = 'application/json';
+       if (requestParams.outputFormat === null) {
+          delete requestParams.outputFormat
+       } else {
+          requestParams.outputFormat = 'application/json';
+      }
     }
 
     if (requestParams.version === '1.1.0') {
